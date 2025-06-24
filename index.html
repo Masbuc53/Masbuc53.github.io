@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mason Buchanan - Software Engineer</title>
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #000000;
+            --link-color: #0000ff;
+            --visited-color: #551a8b;
+            --border-color: #cccccc;
+            --code-bg: #f0f0f0;
+            --tag-bg: #e0e0e0;
+            --highlight: #ffff00;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0a0a;
+            --text-color: #00ff00;
+            --link-color: #00ffff;
+            --visited-color: #ff00ff;
+            --border-color: #333333;
+            --code-bg: #1a1a1a;
+            --tag-bg: #2a2a2a;
+            --highlight: #ffff00;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: flex;
+            max-width: none;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: 400px;
+            padding: 20px;
+            padding-left: 15px;
+            border-right: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            max-width: 800px;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            margin: 20px 0 10px 0;
+            font-weight: normal;
+        }
+
+        h1 {
+            font-size: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: var(--visited-color);
+        }
+
+        /* Layout Components */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+        }
+
+        .nav {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .nav a {
+            margin: 0 10px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            z-index: 1001;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 15px;
+            }
+            
+            .tree {
+                font-size: 11px;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+        }
+
+        /* Search */
+        .search-container {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 5px;
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Autocomplete */
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .autocomplete-suggestion {
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .autocomplete-suggestion:hover,
+        .autocomplete-suggestion.selected {
+            background-color: var(--highlight);
+            color: #000000;
+        }
+
+        .autocomplete-category {
+            padding: 3px 10px;
+            font-size: 10px;
+            opacity: 0.7;
+            background-color: var(--tag-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Blog Posts */
+        .blog-post {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .post-excerpt {
+            margin: 15px 0;
+        }
+
+        .post-excerpt p:first-child {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Visual Tree Structure */
+        .tree {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .tree-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: var(--text-color);
+        }
+
+        .tree-year {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .tree-year::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 30px;
+            bottom: -20px;
+            width: 3px;
+            background-color: var(--border-color);
+        }
+
+        .tree-year-label {
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+
+        .tree-month {
+            position: relative;
+            margin: 16px 0 16px 45px;
+        }
+
+        .tree-month::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 12px;
+            width: 20px;
+            height: 3px;
+            background-color: var(--border-color);
+        }
+
+        .tree-month::after {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 12px;
+            bottom: -16px;
+            width: 3px;
+            background-color: var(--border-color);
+        }
+
+        .tree-month:last-child::after {
+            display: none;
+        }
+
+        .tree-month-label {
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .tree-post {
+            position: relative;
+            margin: 8px 0 8px 70px;
+            font-size: 16px;
+        }
+
+        .tree-post-title {
+            position: relative;
+        }
+
+        .tree-post-title::before {
+            content: '';
+            position: absolute;
+            left: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: var(--border-color);
+        }
+
+        .tree-post a {
+            color: var(--link-color);
+            text-decoration: none;
+            display: block;
+            padding: 4px 0;
+        }
+
+        .tree-post a:hover {
+            background-color: var(--highlight);
+            color: #000000;
+            padding-left: 8px;
+            margin-left: -8px;
+            border-radius: 3px;
+        }
+
+        .tree-post-date {
+            opacity: 0.6;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        /* Tags */
+        .tags {
+            margin: 10px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 2px;
+            background-color: var(--tag-bg);
+            border: 1px solid var(--border-color);
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .tag:hover {
+            background-color: var(--highlight);
+            color: #000000;
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none;
+        }
+
+        .highlight {
+            background-color: var(--highlight);
+            color: #000000;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background-color: var(--code-bg);
+            padding: 2px 4px;
+        }
+
+        /* Animations */
+        .blink-cursor::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Accessibility for Animations */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">◐</button>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="tree">
+                <div class="tree-title">Archive</div>
+                <div class="tree-year">
+                    <div class="tree-year-label">2024</div>
+                    <div class="tree-month">
+                        <div class="tree-month-label">March</div>
+                        <div class="tree-post">
+                            <div class="tree-post-title">
+                                <a href="posts/2024/03/neural-networks.html">Understanding Neural Networks</a>
+                            </div>
+                            <div class="tree-post-date">Mar 15</div>
+                        </div>
+                        <div class="tree-post">
+                            <div class="tree-post-title">
+                                <a href="posts/2024/03/restful-api-nodejs.html">Building a RESTful API with Node.js</a>
+                            </div>
+                            <div class="tree-post-date">Mar 10</div>
+                        </div>
+                        <div class="tree-post">
+                            <div class="tree-post-title">
+                                <a href="posts/2024/03/clean-code.html">The Art of Clean Code</a>
+                            </div>
+                            <div class="tree-post-date">Mar 5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <h1>Mason Buchanan<span class="blink-cursor"></span></h1>
+                <p>Software Engineer</p>
+            </div>
+
+            <nav class="nav">
+                <a href="index.html">[Home]</a>
+                <a href="about.html">[About]</a>
+                <a href="projects.html">[Projects]</a>
+                <a href="mailto:your.email@example.com">[Email]</a>
+                <a href="https://github.com/yourusername">[GitHub]</a>
+            </nav>
+
+            <div class="search-container">
+                <div class="autocomplete-container">
+                    <input type="text" id="search-input" placeholder="Search posts and tags..." onkeyup="handleSearch(event)" onfocus="showSuggestions()" onblur="hideSuggestions()">
+                    <div id="autocomplete-suggestions" class="autocomplete-suggestions" style="display: none;"></div>
+                </div>
+            </div>
+
+            <div id="blog-posts">
+                <!-- Blog posts will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Trie data structure for efficient tag search
+        class TrieNode {
+            constructor() {
+                this.children = {};
+                this.isEndOfWord = false;
+                this.suggestions = [];
+            }
+        }
+
+        class Trie {
+            constructor() {
+                this.root = new TrieNode();
+            }
+
+            insert(word, category = 'tag') {
+                let current = this.root;
+                for (let char of word.toLowerCase()) {
+                    if (!current.children[char]) {
+                        current.children[char] = new TrieNode();
+                    }
+                    current = current.children[char];
+                    // Add suggestion at each level for prefix matching
+                    if (!current.suggestions.find(s => s.word === word)) {
+                        current.suggestions.push({ word, category });
+                    }
+                }
+                current.isEndOfWord = true;
+            }
+
+            search(prefix) {
+                let current = this.root;
+                for (let char of prefix.toLowerCase()) {
+                    if (!current.children[char]) {
+                        return [];
+                    }
+                    current = current.children[char];
+                }
+                return current.suggestions.slice(0, 10); // Limit to 10 suggestions
+            }
+
+            getAllSuggestions(node = this.root, suggestions = []) {
+                if (node.isEndOfWord && suggestions.length < 20) {
+                    suggestions.push(...node.suggestions.slice(0, 1));
+                }
+                for (let child of Object.values(node.children)) {
+                    if (suggestions.length < 20) {
+                        this.getAllSuggestions(child, suggestions);
+                    }
+                }
+                return suggestions;
+            }
+        }
+
+        // Initialize trie
+        const searchTrie = new Trie();
+        let selectedSuggestionIndex = -1;
+
+        // Search functionality with trie-based autocomplete
+        function searchPosts(searchTerm = null) {
+            const term = searchTerm || document.getElementById('search-input').value.toLowerCase();
+            const posts = document.querySelectorAll('.blog-post');
+
+            posts.forEach(post => {
+                const title = post.querySelector('h3').textContent.toLowerCase();
+                const content = post.querySelector('.post-excerpt').textContent.toLowerCase();
+                const tags = post.getAttribute('data-tags').toLowerCase();
+                
+                if (title.includes(term) || content.includes(term) || tags.includes(term)) {
+                    post.classList.remove('hidden');
+                } else {
+                    post.classList.add('hidden');
+                }
+            });
+        }
+
+        // Handle search input with autocomplete
+        function handleSearch(event) {
+            const input = event.target;
+            const value = input.value;
+
+            // Handle keyboard navigation
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                navigateSuggestions(1);
+                return;
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                navigateSuggestions(-1);
+                return;
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                if (selectedSuggestionIndex >= 0) {
+                    selectSuggestion(selectedSuggestionIndex);
+                } else {
+                    searchPosts();
+                    hideSuggestions();
+                }
+                return;
+            } else if (event.key === 'Escape') {
+                hideSuggestions();
+                return;
+            }
+
+            // Update suggestions based on input
+            updateSuggestions(value);
+            searchPosts();
+        }
+
+        // Navigate through suggestions with arrow keys
+        function navigateSuggestions(direction) {
+            const suggestions = document.querySelectorAll('.autocomplete-suggestion:not(.autocomplete-category)');
+            if (suggestions.length === 0) return;
+
+            // Remove current selection
+            if (selectedSuggestionIndex >= 0) {
+                suggestions[selectedSuggestionIndex].classList.remove('selected');
+            }
+
+            // Update index
+            selectedSuggestionIndex += direction;
+            if (selectedSuggestionIndex >= suggestions.length) {
+                selectedSuggestionIndex = 0;
+            } else if (selectedSuggestionIndex < 0) {
+                selectedSuggestionIndex = suggestions.length - 1;
+            }
+
+            // Add new selection
+            suggestions[selectedSuggestionIndex].classList.add('selected');
+            suggestions[selectedSuggestionIndex].scrollIntoView({ block: 'nearest' });
+        }
+
+        // Select a suggestion by index
+        function selectSuggestion(index) {
+            const suggestions = document.querySelectorAll('.autocomplete-suggestion:not(.autocomplete-category)');
+            if (suggestions[index]) {
+                selectSuggestionByData(suggestions[index]);
+            }
+        }
+
+        // Select a suggestion by element
+        function selectSuggestionByData(element) {
+            const word = element.dataset.word;
+            const category = element.dataset.category;
+            
+            if (category === 'tag') {
+                filterByTag(word);
+                document.getElementById('search-input').value = `tag:${word}`;
+            } else {
+                document.getElementById('search-input').value = word;
+                searchPosts(word);
+            }
+            hideSuggestions();
+        }
+
+        // Update autocomplete suggestions
+        function updateSuggestions(value) {
+            const container = document.getElementById('autocomplete-suggestions');
+            
+            if (value.length < 1) {
+                container.style.display = 'none';
+                return;
+            }
+
+            const suggestions = searchTrie.search(value);
+            
+            if (suggestions.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            // Group suggestions by category
+            const grouped = suggestions.reduce((acc, suggestion) => {
+                if (!acc[suggestion.category]) {
+                    acc[suggestion.category] = [];
+                }
+                acc[suggestion.category].push(suggestion);
+                return acc;
+            }, {});
+
+            let html = '';
+            let suggestionIndex = 0;
+            
+            Object.keys(grouped).forEach(category => {
+                html += `<div class="autocomplete-category">${category.toUpperCase()}</div>`;
+                grouped[category].forEach((suggestion) => {
+                    html += `<div class="autocomplete-suggestion" data-word="${suggestion.word}" data-category="${suggestion.category}" data-index="${suggestionIndex}" onmousedown="selectSuggestionByData(this)">${suggestion.word}</div>`;
+                    suggestionIndex++;
+                });
+            });
+
+            container.innerHTML = html;
+            container.style.display = 'block';
+            selectedSuggestionIndex = -1;
+        }
+
+        // Show suggestions on focus
+        function showSuggestions() {
+            const value = document.getElementById('search-input').value;
+            if (value.length > 0) {
+                updateSuggestions(value);
+            }
+        }
+
+        // Hide suggestions on blur (with delay for click events)
+        let hideTimeout;
+        function hideSuggestions() {
+            hideTimeout = setTimeout(() => {
+                document.getElementById('autocomplete-suggestions').style.display = 'none';
+                selectedSuggestionIndex = -1;
+            }, 150);
+        }
+
+        // Prevent hiding when clicking on suggestions
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('autocomplete-suggestion')) {
+                clearTimeout(hideTimeout);
+            }
+        });
+
+        // Tag filtering
+        function filterByTag(tag) {
+            const posts = document.querySelectorAll('.blog-post');
+            
+            posts.forEach(post => {
+                const tags = post.getAttribute('data-tags').split(',');
+                if (tags.includes(tag)) {
+                    post.classList.remove('hidden');
+                } else {
+                    post.classList.add('hidden');
+                }
+            });
+        }
+
+        // Show all posts
+        function showAllPosts() {
+            const posts = document.querySelectorAll('.blog-post');
+            posts.forEach(post => {
+                post.classList.remove('hidden');
+            });
+            document.getElementById('search-input').value = '';
+            hideSuggestions();
+        }
+
+        // Simple Markdown Parser
+        class MarkdownParser {
+            static parseFrontmatter(content) {
+                const frontmatterRegex = /^---\n([\s\S]+?)\n---\n([\s\S]*)$/;
+                const match = content.match(frontmatterRegex);
+                
+                if (!match) {
+                    return { metadata: {}, content: content };
+                }
+                
+                const yamlContent = match[1];
+                const markdownContent = match[2];
+                
+                // Simple YAML parser (handles basic key: value pairs)
+                const metadata = {};
+                yamlContent.split('\n').forEach(line => {
+                    const colonIndex = line.indexOf(':');
+                    if (colonIndex > 0) {
+                        const key = line.substring(0, colonIndex).trim();
+                        let value = line.substring(colonIndex + 1).trim();
+                        
+                        // Remove quotes if present
+                        if ((value.startsWith('"') && value.endsWith('"')) || 
+                            (value.startsWith("'") && value.endsWith("'"))) {
+                            value = value.slice(1, -1);
+                        }
+                        
+                        // Handle arrays (tags)
+                        if (value.startsWith('[') && value.endsWith(']')) {
+                            value = value.slice(1, -1).split(',').map(item => 
+                                item.trim().replace(/["']/g, '')
+                            );
+                        }
+                        
+                        metadata[key] = value;
+                    }
+                });
+                
+                return { metadata, content: markdownContent };
+            }
+            
+            static parseMarkdown(markdown) {
+                let html = markdown;
+                
+                // Headers
+                html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+                html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+                html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+                
+                // Code blocks
+                html = html.replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>');
+                
+                // Inline code
+                html = html.replace(/`([^`]+)`/gim, '<code>$1</code>');
+                
+                // Bold
+                html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+                
+                // Italic
+                html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+                
+                // Links
+                html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>');
+                
+                // Lists
+                html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
+                html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+                
+                // Paragraphs (split by double newlines)
+                const paragraphs = html.split('\n\n').filter(p => p.trim());
+                html = paragraphs.map(p => {
+                    const trimmed = p.trim();
+                    // Don't wrap headers, code blocks, or lists in paragraphs
+                    if (trimmed.startsWith('<h') || trimmed.startsWith('<pre') || 
+                        trimmed.startsWith('<ul') || trimmed.startsWith('<ol')) {
+                        return trimmed;
+                    }
+                    return `<p>${trimmed}</p>`;
+                }).join('\n');
+                
+                return html;
+            }
+        }
+        
+        // Blog posts with excerpts and date-based paths
+        const blogPosts = [
+            {
+                title: "Understanding Neural Networks",
+                date: "2024-03-15",
+                readTime: "5 min read",
+                excerpt: "A deep dive into the fundamentals of neural networks and how they learn from data. We'll explore backpropagation, activation functions, and practical implementation tips.",
+                content: "Neural networks are the backbone of modern AI systems. At their core, they're mathematical functions that can approximate complex patterns in data through layers of interconnected nodes.",
+                tags: ["ai", "machine-learning", "neural-networks", "deep-learning"],
+                slug: "neural-networks",
+                path: "posts/2024/03/neural-networks.html"
+            },
+            {
+                title: "Building a RESTful API with Node.js",
+                date: "2024-03-10",
+                readTime: "8 min read",
+                excerpt: "Learn how to create a scalable RESTful API using Node.js, Express, and MongoDB. Includes authentication, error handling, and best practices.",
+                content: "RESTful APIs are the standard for modern web services. This guide walks through building a production-ready API from scratch.",
+                tags: ["nodejs", "api", "backend", "javascript", "mongodb"],
+                slug: "restful-api-nodejs",
+                path: "posts/2024/03/restful-api-nodejs.html"
+            },
+            {
+                title: "The Art of Clean Code",
+                date: "2024-03-05",
+                readTime: "6 min read",
+                excerpt: "Exploring principles and practices for writing maintainable, readable code. From naming conventions to SOLID principles.",
+                content: "Clean code is more than just working code - it's code that other developers (including your future self) can understand and modify with confidence.",
+                tags: ["programming", "best-practices", "clean-code", "software-engineering"],
+                slug: "clean-code",
+                path: "posts/2024/03/clean-code.html"
+            }
+        ];
+        
+        // Function to render blog posts
+        function renderBlogPosts() {
+            const container = document.getElementById('blog-posts');
+            
+            blogPosts.forEach((post, index) => {
+                const postHTML = `
+                    <article class="blog-post" data-tags="${post.tags.join(',')}">
+                        <h3><a href="${post.path}">${post.title}</a></h3>
+                        <div class="post-meta">${post.date} | ${post.readTime}</div>
+                        <div class="post-excerpt">
+                            <p><strong>${post.excerpt}</strong></p>
+                            <p>${post.content}</p>
+                            <p><a href="${post.path}">Read more →</a></p>
+                        </div>
+                        <div class="tags">
+                            ${post.tags.map(tag => 
+                                `<a href="#" class="tag" onclick="filterByTag('${tag}'); return false;">${tag}</a>`
+                            ).join('')}
+                        </div>
+                    </article>
+                `;
+                container.innerHTML += postHTML;
+            });
+
+            // Add "Show All" button after posts
+            container.innerHTML += `
+                <div style="text-align: center; margin: 20px 0;">
+                    <button onclick="showAllPosts()" style="padding: 5px 15px; font-family: 'Courier New', monospace; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); cursor: pointer;">
+                        [Show All Posts]
+                    </button>
+                </div>
+            `;
+
+            // Initialize trie with tags and titles after posts are rendered
+            initializeSearchTrie();
+        }
+
+        // Initialize the search trie with all searchable content
+        function initializeSearchTrie() {
+            // Clear existing trie
+            searchTrie.root = new TrieNode();
+            
+            blogPosts.forEach(post => {
+                // Add all tags to trie
+                if (post.tags && Array.isArray(post.tags)) {
+                    post.tags.forEach(tag => {
+                        searchTrie.insert(tag, 'tag');
+                    });
+                }
+                
+                // Add title words to trie
+                if (post.title) {
+                    const titleWords = post.title.toLowerCase().split(/\s+/);
+                    titleWords.forEach(word => {
+                        const cleanWord = word.replace(/[^a-z0-9]/g, '');
+                        if (cleanWord.length > 2) {
+                            searchTrie.insert(cleanWord, 'title');
+                        }
+                    });
+                }
+                
+                // Add significant content words from excerpt and content
+                const allContent = (post.excerpt + ' ' + post.content).toLowerCase();
+                const contentWords = allContent.split(/\s+/);
+                const commonWords = new Set(['the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these', 'those', 'a', 'an']);
+                
+                contentWords.forEach(word => {
+                    const cleanWord = word.replace(/[^a-z0-9]/g, '');
+                    if (cleanWord.length > 3 && !commonWords.has(cleanWord)) {
+                        searchTrie.insert(cleanWord, 'content');
+                    }
+                });
+            });
+        }
+
+        // Initialize blog posts when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBlogPosts();
+        });
+    </script>
+</body>
+</html>

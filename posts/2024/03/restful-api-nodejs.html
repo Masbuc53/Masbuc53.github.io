@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a RESTful API with Node.js - Mason Buchanan</title>
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #000000;
+            --link-color: #0000ff;
+            --visited-color: #551a8b;
+            --border-color: #cccccc;
+            --code-bg: #f0f0f0;
+            --tag-bg: #e0e0e0;
+            --highlight: #ffff00;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0a0a;
+            --text-color: #00ff00;
+            --link-color: #00ffff;
+            --visited-color: #ff00ff;
+            --border-color: #333333;
+            --code-bg: #1a1a1a;
+            --tag-bg: #2a2a2a;
+            --highlight: #ffff00;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            margin: 20px 0 10px 0;
+            font-weight: normal;
+        }
+
+        h1 {
+            font-size: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 30px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: var(--visited-color);
+        }
+
+        /* Layout Components */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+        }
+
+        .nav {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .nav a {
+            margin: 0 10px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+        }
+
+        .back-link {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .post-content {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Tags */
+        .tags {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 2px;
+            background-color: var(--tag-bg);
+            border: 1px solid var(--border-color);
+            font-size: 12px;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .tag:hover {
+            background-color: var(--highlight);
+            color: #000000;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background-color: var(--code-bg);
+            padding: 2px 4px;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        /* Animations */
+        .blink-cursor::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Accessibility for Animations */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">◐</button>
+
+    <div class="header">
+        <h1>Building a RESTful API with Node.js<span class="blink-cursor"></span></h1>
+    </div>
+
+    <nav class="nav">
+        <a href="index.html">[Home]</a>
+        <a href="about.html">[About]</a>
+        <a href="projects.html">[Projects]</a>
+        <a href="mailto:your.email@example.com">[Email]</a>
+        <a href="https://github.com/yourusername">[GitHub]</a>
+    </nav>
+
+    <div class="back-link">
+        <a href="index.html">← Back to Blog</a>
+    </div>
+
+    <article class="post-content">
+        <div class="post-meta">March 10, 2024 | 8 min read</div>
+        
+        <h1>Building a RESTful API with Node.js</h1>
+        
+        <p>Learn how to create a scalable RESTful API using Node.js, Express, and MongoDB. Includes authentication, error handling, and best practices.</p>
+        
+        <p>RESTful APIs are the standard for modern web services. This guide walks through building a production-ready API from scratch.</p>
+        
+        <h2>What We'll Cover:</h2>
+        
+        <ul>
+            <li>Setting up Express.js with proper middleware</li>
+            <li>Implementing JWT authentication</li>
+            <li>Database design with MongoDB and Mongoose</li>
+            <li>Error handling and validation</li>
+            <li>Rate limiting and security best practices</li>
+        </ul>
+        
+        <h2>Getting Started</h2>
+        
+        <p>First, let's set up our project structure:</p>
+        
+        <pre><code>mkdir my-api
+cd my-api
+npm init -y
+npm install express mongoose jsonwebtoken bcryptjs</code></pre>
+        
+        <h2>Example Route Handler</h2>
+        
+        <pre><code>// Example route handler
+app.get('/api/users/:id', authenticate, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});</code></pre>
+        
+        <h2>Authentication Strategy</h2>
+        
+        <p>For authentication, we'll use JSON Web Tokens (JWT) which provide a stateless authentication mechanism that's perfect for RESTful APIs.</p>
+        
+        <h2>Database Design</h2>
+        
+        <p>A well-designed database schema is crucial for API performance. We'll use MongoDB with Mongoose for schema validation and relationship management.</p>
+        
+        <div class="tags">
+            <a href="index.html" class="tag">nodejs</a>
+            <a href="index.html" class="tag">api</a>
+            <a href="index.html" class="tag">backend</a>
+            <a href="index.html" class="tag">javascript</a>
+            <a href="index.html" class="tag">mongodb</a>
+        </div>
+    </article>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+</html>

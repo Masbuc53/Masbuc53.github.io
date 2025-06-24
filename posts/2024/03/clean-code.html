@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of Clean Code - Mason Buchanan</title>
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #000000;
+            --link-color: #0000ff;
+            --visited-color: #551a8b;
+            --border-color: #cccccc;
+            --code-bg: #f0f0f0;
+            --tag-bg: #e0e0e0;
+            --highlight: #ffff00;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0a0a;
+            --text-color: #00ff00;
+            --link-color: #00ffff;
+            --visited-color: #ff00ff;
+            --border-color: #333333;
+            --code-bg: #1a1a1a;
+            --tag-bg: #2a2a2a;
+            --highlight: #ffff00;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            margin: 20px 0 10px 0;
+            font-weight: normal;
+        }
+
+        h1 {
+            font-size: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 30px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: var(--visited-color);
+        }
+
+        /* Layout Components */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+        }
+
+        .nav {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .nav a {
+            margin: 0 10px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+        }
+
+        .back-link {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .post-content {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Tags */
+        .tags {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 2px;
+            background-color: var(--tag-bg);
+            border: 1px solid var(--border-color);
+            font-size: 12px;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .tag:hover {
+            background-color: var(--highlight);
+            color: #000000;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background-color: var(--code-bg);
+            padding: 2px 4px;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            margin: 20px 0;
+            padding: 10px 20px;
+            border-left: 3px solid var(--border-color);
+            background-color: var(--code-bg);
+            font-style: italic;
+        }
+
+        /* Animations */
+        .blink-cursor::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Accessibility for Animations */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">◐</button>
+
+    <div class="header">
+        <h1>The Art of Clean Code<span class="blink-cursor"></span></h1>
+    </div>
+
+    <nav class="nav">
+        <a href="index.html">[Home]</a>
+        <a href="about.html">[About]</a>
+        <a href="projects.html">[Projects]</a>
+        <a href="mailto:your.email@example.com">[Email]</a>
+        <a href="https://github.com/yourusername">[GitHub]</a>
+    </nav>
+
+    <div class="back-link">
+        <a href="index.html">← Back to Blog</a>
+    </div>
+
+    <article class="post-content">
+        <div class="post-meta">March 5, 2024 | 6 min read</div>
+        
+        <h1>The Art of Clean Code</h1>
+        
+        <p>Exploring principles and practices for writing maintainable, readable code. From naming conventions to SOLID principles.</p>
+        
+        <p>Clean code is more than just working code - it's code that other developers (including your future self) can understand and modify with confidence.</p>
+        
+        <h2>Core Principles:</h2>
+        
+        <ul>
+            <li><strong>Meaningful Names</strong>: Variables and functions should clearly express their purpose</li>
+            <li><strong>Small Functions</strong>: Each function should do one thing well</li>
+            <li><strong>DRY (Don't Repeat Yourself)</strong>: Avoid duplication</li>
+            <li><strong>Comments</strong>: Code should be self-documenting; use comments sparingly</li>
+        </ul>
+        
+        <h2>The Importance of Naming</h2>
+        
+        <p>Good names are the foundation of clean code. A well-named variable eliminates the need for comments:</p>
+        
+        <pre><code>// Bad
+const d = new Date();
+const u = users.filter(u => u.active);
+
+// Good
+const currentDate = new Date();
+const activeUsers = users.filter(user => user.isActive);</code></pre>
+        
+        <h2>Function Design</h2>
+        
+        <p>Functions should be small and focused. If you can't easily describe what a function does in one sentence, it's probably doing too much.</p>
+        
+        <h2>The Boy Scout Rule</h2>
+        
+        <blockquote>
+            <p>"Always leave the campground cleaner than you found it."</p>
+        </blockquote>
+        
+        <p>Apply this to code: whenever you work on a piece of code, try to leave it a little cleaner than when you found it.</p>
+        
+        <p>Remember: <em>"Any fool can write code that a computer can understand. Good programmers write code that humans can understand."</em> - Martin Fowler</p>
+        
+        <div class="tags">
+            <a href="index.html" class="tag">programming</a>
+            <a href="index.html" class="tag">best-practices</a>
+            <a href="index.html" class="tag">clean-code</a>
+            <a href="index.html" class="tag">software-engineering</a>
+        </div>
+    </article>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Mason Buchanan</title>
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #000000;
+            --link-color: #0000ff;
+            --visited-color: #551a8b;
+            --border-color: #cccccc;
+            --code-bg: #f0f0f0;
+            --tag-bg: #e0e0e0;
+            --highlight: #ffff00;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0a0a;
+            --text-color: #00ff00;
+            --link-color: #00ffff;
+            --visited-color: #ff00ff;
+            --border-color: #333333;
+            --code-bg: #1a1a1a;
+            --tag-bg: #2a2a2a;
+            --highlight: #ffff00;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            margin: 20px 0 10px 0;
+            font-weight: normal;
+        }
+
+        h1 {
+            font-size: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 30px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: var(--visited-color);
+        }
+
+        /* Layout Components */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+        }
+
+        .nav {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .nav a {
+            margin: 0 10px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+        }
+
+        .project {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .project-title {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .project-status {
+            font-size: 12px;
+            padding: 2px 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--tag-bg);
+        }
+
+        .project-meta {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        .project-description {
+            margin-bottom: 15px;
+        }
+
+        .project-tech {
+            margin: 10px 0;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            background-color: var(--tag-bg);
+            border: 1px solid var(--border-color);
+            font-size: 11px;
+            color: var(--text-color);
+        }
+
+        .project-links {
+            margin-top: 15px;
+        }
+
+        .project-links a {
+            margin-right: 15px;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background-color: var(--code-bg);
+            padding: 2px 4px;
+        }
+
+        /* Animations */
+        .blink-cursor::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Accessibility for Animations */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">◐</button>
+
+    <div class="header">
+        <h1>Projects<span class="blink-cursor"></span></h1>
+        <p>A collection of things I've built</p>
+    </div>
+
+    <nav class="nav">
+        <a href="index.html">[Home]</a>
+        <a href="about.html">[About]</a>
+        <a href="projects.html">[Projects]</a>
+        <a href="mailto:your.email@example.com">[Email]</a>
+        <a href="https://github.com/yourusername">[GitHub]</a>
+    </nav>
+
+    <div id="projects-container">
+        <!-- Projects will be dynamically loaded here -->
+    </div>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Project data
+        const projects = [
+            {
+                title: "TaskFlow API",
+                status: "Active",
+                date: "2024",
+                description: "A robust task management API built with Node.js and Express. Features include user authentication, real-time updates, file attachments, and comprehensive project management capabilities. Designed for scalability and ease of integration.",
+                tech: ["Node.js", "Express", "MongoDB", "Socket.io", "JWT", "Multer"],
+                features: [
+                    "RESTful API design with comprehensive endpoints",
+                    "Real-time task updates using WebSockets",
+                    "File upload and attachment management",
+                    "Role-based access control",
+                    "Automated testing with Jest"
+                ],
+                links: {
+                    github: "https://github.com/yourusername/taskflow-api",
+                    demo: "https://taskflow-demo.herokuapp.com"
+                }
+            },
+            {
+                title: "React Dashboard Pro",
+                status: "Complete",
+                date: "2024",
+                description: "A modern, responsive dashboard built with React and TypeScript. Features data visualization, real-time metrics, and a clean, intuitive interface. Optimized for performance with lazy loading and efficient state management.",
+                tech: ["React", "TypeScript", "Chart.js", "Tailwind CSS", "Redux Toolkit", "React Query"],
+                features: [
+                    "Dynamic charts and data visualization",
+                    "Responsive design for all screen sizes",
+                    "Dark/light theme switching",
+                    "Efficient data caching and synchronization",
+                    "Component-based architecture"
+                ],
+                links: {
+                    github: "https://github.com/yourusername/react-dashboard-pro",
+                    demo: "https://react-dashboard-pro.netlify.app"
+                }
+            },
+            {
+                title: "CLI Tool Suite",
+                status: "Active",
+                date: "2023-2024",
+                description: "A collection of command-line utilities for developers. Includes tools for project scaffolding, code formatting, git workflow automation, and development environment setup. Built with Go for speed and cross-platform compatibility.",
+                tech: ["Go", "Cobra CLI", "Git", "YAML", "JSON"],
+                features: [
+                    "Project template generation",
+                    "Automated git workflow scripts",
+                    "Code formatting and linting integration",
+                    "Cross-platform binary distribution",
+                    "Plugin architecture for extensibility"
+                ],
+                links: {
+                    github: "https://github.com/yourusername/dev-cli-suite"
+                }
+            },
+            {
+                title: "Microservices Architecture Demo",
+                status: "Complete",
+                date: "2023",
+                description: "A demonstration of microservices architecture using Docker, Kubernetes, and service mesh. Includes user service, product catalog, order processing, and notification systems with full observability.",
+                tech: ["Docker", "Kubernetes", "Go", "gRPC", "PostgreSQL", "Redis", "Prometheus"],
+                features: [
+                    "Service-to-service communication with gRPC",
+                    "Containerized deployment with Docker",
+                    "Kubernetes orchestration and scaling",
+                    "Distributed tracing and monitoring",
+                    "Circuit breaker pattern implementation"
+                ],
+                links: {
+                    github: "https://github.com/yourusername/microservices-demo"
+                }
+            },
+            {
+                title: "Algorithm Visualizer",
+                status: "Complete",
+                date: "2023",
+                description: "An interactive web application for visualizing common algorithms and data structures. Built to help students and developers understand complex algorithms through step-by-step animations and explanations.",
+                tech: ["JavaScript", "HTML5 Canvas", "CSS3", "Webpack"],
+                features: [
+                    "Interactive sorting algorithm animations",
+                    "Graph traversal visualizations",
+                    "Data structure demonstrations",
+                    "Step-by-step algorithm explanations",
+                    "Adjustable animation speed and input size"
+                ],
+                links: {
+                    github: "https://github.com/yourusername/algorithm-visualizer",
+                    demo: "https://algo-viz.github.io"
+                }
+            },
+            {
+                title: "Home Lab Automation",
+                status: "Ongoing",
+                date: "2022-2024",
+                description: "Personal infrastructure automation using Infrastructure as Code principles. Includes server provisioning, application deployment, monitoring setup, and backup automation for a home lab environment.",
+                tech: ["Ansible", "Terraform", "Docker", "Prometheus", "Grafana", "Pi-hole"],
+                features: [
+                    "Automated server provisioning",
+                    "Container orchestration and deployment",
+                    "Network-wide ad blocking and DNS",
+                    "System monitoring and alerting",
+                    "Automated backup and recovery"
+                ],
+                links: {
+                    github: "https://github.com/yourusername/homelab-automation"
+                }
+            }
+        ];
+
+        // Function to render projects
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            
+            projects.forEach((project, index) => {
+                const projectHTML = `
+                    <div class="project fade-in" style="animation-delay: ${index * 0.1}s">
+                        <div class="project-header">
+                            <h3 class="project-title">${project.title}</h3>
+                            <span class="project-status">${project.status}</span>
+                        </div>
+                        <div class="project-meta">${project.date}</div>
+                        <div class="project-description">
+                            <p>${project.description}</p>
+                        </div>
+                        <div class="project-tech">
+                            <strong>Technologies:</strong><br>
+                            ${project.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                        </div>
+                        ${project.features ? `
+                            <div style="margin: 15px 0;">
+                                <strong>Key Features:</strong>
+                                <ul style="margin-left: 20px; margin-top: 5px;">
+                                    ${project.features.map(feature => `<li>${feature}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        <div class="project-links">
+                            ${project.links.github ? `<a href="${project.links.github}" target="_blank">[GitHub]</a>` : ''}
+                            ${project.links.demo ? `<a href="${project.links.demo}" target="_blank">[Live Demo]</a>` : ''}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += projectHTML;
+            });
+
+            // Add footer note
+            container.innerHTML += `
+                <div style="text-align: center; margin: 40px 0; padding: 20px; border-top: 1px dashed var(--border-color);">
+                    <p>More projects on <a href="https://github.com/yourusername">GitHub</a></p>
+                    <p style="font-size: 12px; margin-top: 10px; opacity: 0.7;">
+                        Want to collaborate? Check out my <a href="about.html">contact info</a>
+                    </p>
+                </div>
+            `;
+        }
+
+        // Initialize projects when page loads
+        document.addEventListener('DOMContentLoaded', renderProjects);
+    </script>
+</body>
+</html>
