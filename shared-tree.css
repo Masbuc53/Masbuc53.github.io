@@ -1,0 +1,134 @@
+/* Shared Tree Structure CSS - Ensures identical formatting across all pages */
+/* Using !important to override any conflicting styles */
+
+/* Visual Tree Structure */
+.tree {
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+}
+
+.tree-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    color: var(--text-color);
+}
+
+.tree-year {
+    position: relative;
+    margin: 20px 0;
+    /* Force consistent height calculation */
+    display: block;
+    overflow: visible;
+}
+
+.tree-year::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 30px;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--border-color);
+}
+
+.tree-year-label {
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+
+.tree-month {
+    position: relative;
+    margin: 16px 0 16px 45px;
+}
+
+.tree-month:last-child {
+    padding-bottom: 8px;
+}
+
+.tree-month::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 12px;
+    width: 20px;
+    height: 3px;
+    background-color: var(--border-color);
+}
+
+.tree-month::after {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 12px;
+    bottom: -16px;
+    width: 3px;
+    background-color: var(--border-color);
+}
+
+.tree-month:last-child::after {
+    display: none;
+}
+
+.tree-month-label {
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.tree-post {
+    position: relative !important;
+    margin: 8px 0 8px 70px !important;
+    font-size: 16px !important;
+}
+
+.tree-post-title {
+    position: relative !important;
+}
+
+.tree-post-title::before {
+    content: '' !important;
+    position: absolute !important;
+    left: -50px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 20px !important;
+    height: 3px !important;
+    background-color: var(--border-color) !important;
+}
+
+.tree-post a {
+    color: var(--link-color) !important;
+    text-decoration: none !important;
+    display: block !important;
+    padding: 4px 0 !important;
+}
+
+.tree-post a:hover {
+    background-color: var(--highlight) !important;
+    color: #000000 !important;
+    padding-left: 8px !important;
+    margin-left: -8px !important;
+    border-radius: 3px !important;
+}
+
+.tree-post-date {
+    opacity: 0.6 !important;
+    font-size: 14px !important;
+    margin-top: 2px !important;
+}
+
+/* Mobile Tree Styles */
+@media (max-width: 768px) {
+    .tree {
+        font-size: 14px !important;
+    }
+    
+    .tree-post a {
+        padding: 8px 4px !important;
+        display: block !important;
+    }
+}
